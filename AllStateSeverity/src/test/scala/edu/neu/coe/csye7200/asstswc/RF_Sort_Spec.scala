@@ -8,14 +8,14 @@ import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions.{lit, row_number}
 
-class WordCountSpec extends FlatSpec with Matchers with BeforeAndAfter  {
+class RF_Sort_Spec extends FlatSpec with Matchers with BeforeAndAfter  {
 
   implicit var spark: SparkSession = _
 
   before {
     spark = SparkSession
       .builder()
-      .appName("WordCount")
+      .appName("RF_Sort")
       .master("local[*]")
       .getOrCreate()
   }
@@ -28,7 +28,7 @@ class WordCountSpec extends FlatSpec with Matchers with BeforeAndAfter  {
 
   behavior of "Spark"
 
-  it should s"work for wordCount" taggedAs Slow in {
+  it should s"work for RF_Sort" taggedAs Slow in {
 
     RF_sort_feature_nums.process(true).withColumn("cat index",row_number.over(Window.partitionBy(lit(1)).orderBy(lit(1)))).sort("cat num").collect().flatMap(x=>x.toSeq) should matchPattern {
         case Array(1,1,2,2,3,3) =>
